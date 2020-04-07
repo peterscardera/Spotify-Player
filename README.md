@@ -18,9 +18,9 @@ There are many third-party APIs that let us build rich applications on top of th
 - You can use the Instagram API to display photos from Instagram
 - You can use various sports APIs to build analytics apps based on sports data.
 
-The way that they typically work is they expose a set of "REST endpoints". This is very similar to the endpoints you built while working on the Twitter project!
+The way that they typically work is they expose a set of "RESTful endpoints".
 
-The trickiest part of working with third-party APIs is _authentication_. APIs don't want strangers to abuse their services, so they enforce that you register for a _key_ and use that key on all requests.
+The trickiest part of working with third-party APIs is _authentication_. APIs don't want strangers to abuse their services, so they require that you register for a _key_ and use that key on all requests.
 
 First order of business is registering for a Spotify API key.
 
@@ -50,18 +50,18 @@ Afterwards, you should be taken to the app's home screen. This page will give us
 
 ### Storing keys
 
-Create a new file in the root `workshop` directory named `.env`. Copy and paste this into it:
+Duplicate the `.env.example` in the root `workshop` directory, and then rename it `.env`. Copy and paste your `KEY` and `SECRET` it the `.env` file:
+
+Replace "YOUR_KEY_HERE" with the keys provided from Spotify
 
 ```
 SPOTIFY_CLIENT_ID=YOUR_KEY_HERE
 SPOTIFY_SECRET=YOUR_KEY_HERE
 ```
 
-Replace "YOUR_KEY_HERE" with the keys provided from Spotify
-
 ### Avoiding source control
 
-**It is very important** that you not commit this `.env` file into git - otherwise, it will show up on Github. Bad actors run scripts that search Github for exposed private keys. If they find yours, they'll use it for nefarious purposes, and you'll get banned from using the Spotify API.
+🚨 **It is very important** that you not commit this `.env` file into git - otherwise, it will show up on Github. Bad actors run scripts that search Github for exposed private keys. If they find yours, they'll use it for nefarious purposes, and you'll get banned from using the Spotify API.
 
 You can tell git not to track certain files in the `.gitignore`.
 
@@ -79,7 +79,7 @@ If you open `workshop/.gitignore`, it should include this:
 .env.production.local
 ```
 
-Because we've already added `.env` to this file, git won't try and commit it. No action is needed on your part, but it's important to be mindful of this on other projects. Always add your "secrets" to gitignore.
+Because we've already added `.env` to this file, git won't try and commit it. No action is needed on your part, **but it's important to be mindful of this on other projects.** Always add your "secrets" to gitignore.
 
 ## Understanding the initial state of the workshop
 
@@ -476,11 +476,11 @@ Here's our starting point, without Redux:
 // Inside App.js
 React.useEffect(() => {
   fetch('/spotify_access_token')
-    .then(res => res.json())
-    .then(json => {
+    .then((res) => res.json())
+    .then((json) => {
       console.log(json);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
     });
 }, []);
@@ -499,7 +499,7 @@ export const requestAccessToken = () => ({
   type: 'REQUEST_ACCESS_TOKEN',
 });
 
-export const receiveAccessToken = token => ({
+export const receiveAccessToken = (token) => ({
   type: 'RECEIVE_ACCESS_TOKEN',
   token,
 });
@@ -576,7 +576,7 @@ Use the `useSelector` hook from the `react-redux` package to select it:
 ```js
 // ArtistRoute.js
 const ArtistRoute = () => {
-  const accessToken = useSelector(state => state.auth.token);
+  const accessToken = useSelector((state) => state.auth.token);
 
   return accessToken;
 };
@@ -614,7 +614,7 @@ export function fetchArtistProfile(token, artistId) {
 
   const url = `https://api.spotify.com/v1/artists/${artistId}`;
 
-  return fetch(url, options).then(response => response.json());
+  return fetch(url, options).then((response) => response.json());
 }
 ```
 
