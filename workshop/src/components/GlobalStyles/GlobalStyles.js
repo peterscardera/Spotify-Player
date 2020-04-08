@@ -2,7 +2,11 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
 html,
-body,
+body {
+  background:#0B0F14;
+  color: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+}
 div,
 span {
   margin: 0;
@@ -19,6 +23,7 @@ span {
   -webkit-font-smoothing: antialiased;
   font-family: 'Montserrat', sans-serif;
 }
+
 
 
 
