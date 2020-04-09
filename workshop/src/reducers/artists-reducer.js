@@ -1,6 +1,6 @@
 const initialState = {
   currentArtist: null,
-  status: "idle ",
+  status: "loading",
 };
 
 export default function artitstReducer(state = initialState, action) {
@@ -19,31 +19,38 @@ export default function artitstReducer(state = initialState, action) {
       // stateCopy.currentArtist.profile = action.artistProfile
       return {
         ...state,
-        status:'idle',
         currentArtist: {
           info: action.artistProfile,
         },
       };
     }
     case "RECEIVE_TOP_TRACKS": {
-      console.log(action, "IT HIT THE CASE TYPE");
+      //console.log(action, "IT HIT THE CASE TYPE");
       let onlyThreeTracks = action.topTracks.slice(0, 3);
-      // console.log(onlyTwoTracks);
-      // onlyTwoTracks.map((item, i) => {
-      //   console.log(item);
-      // });
       return {
-
         ...state,
         topTracks: onlyThreeTracks,
       };
     }
-    case "FINISH_RECEIVING_ALL_ARTIST_INFO": {
-      console.log(action, 'IT FINISHED RECEIVING')
+    case "RECEIVE_RELATED_ARTISTS": {
+     // console.log(action)
       return {
         ...state,
-        status: "finished"
+        relatedArtists: action.related
       }
+    }
+    case "RECEIVE_ARTIST_ERROR": {
+      return {
+        ...state,
+        status: "error",
+      };
+    }
+    case "FINISH_RECEIVING_ALL_ARTIST_INFO": {
+   //   console.log(action, "IT FINISHED RECEIVING");
+      return {
+        ...state,
+        status: "finished",
+      };
     }
     default: {
       return state;

@@ -5,16 +5,15 @@ const Genres = ({ twoGenres }) => {
   // console.log(twoGenres);
   return (
     <React.Fragment>
-        <Wrapper>
-
-      {twoGenres.slice(0, 2).map((item, i) => {
+      <Wrapper>
+        {twoGenres.slice(0, 2).map((item, i) => {
           return (
-              <>
-            <div>{item}</div>
-          </>
-        );
-    })}
-    </Wrapper>
+            <>
+              <Styled>{item}</Styled>
+            </>
+          );
+        })}
+      </Wrapper>
     </React.Fragment>
   );
 };
@@ -22,5 +21,9 @@ const Genres = ({ twoGenres }) => {
 export default Genres;
 
 const Wrapper = styled.div`
-display: flex;
-`
+ 
+`;
+
+const Styled = styled.div`
+  background: rgba(75, 75, 75, 0.4);
+`;

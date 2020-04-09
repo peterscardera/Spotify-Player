@@ -3,9 +3,9 @@ import styled from "styled-components";
 import PlayButton from "react-play-button";
 
 const TopTrack = ({ currentlyPlaying ,setCurrentlyPlaying,eachTrack }) => {
-  console.log(eachTrack, "IN TOP TRACKS");
+  //console.log(eachTrack, "IN TOP TRACKS");
 // const [ currentlyPlaying, setCurrentlyPlaying] = useState(null)
-console.log(currentlyPlaying)
+//console.log(currentlyPlaying)
   return (
     <React.Fragment>
       <PlayButton

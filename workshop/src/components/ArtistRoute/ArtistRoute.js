@@ -2,10 +2,16 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { fetchArtistProfile, fetchTopTracks } from "../../helpers/api-helpers";
+import {
+  fetchArtistProfile,
+  fetchTopTracks,
+  fetchRelatedArtists,
+} from "../../helpers/api-helpers";
 import converter from "../../helpers/helpers";
 import Genres from "./Genres";
 import TopTrack from "./TopTrack";
+import Loading from "../Loading/Loading";
+import RelatedArtists from "./RelatedArtists";
 
 import { useDispatch } from "react-redux";
 import {
@@ -13,19 +19,20 @@ import {
   receivedArtistInfo,
   requestArtistError,
   receiveTopTracks,
+  receiveRelatedArtists,
   finishReceivingAllArtistInfo,
 } from "../../actions";
 
 const ArtistRoute = () => {
-  const [ currentlyPlaying, setCurrentlyPlaying] = useState(null)
-
+  const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
 
   const accessToken = useSelector((state) => state.auth.token);
   const artistInfo = useSelector((state) => state.artists.currentArtist);
   const fetchedTopT = useSelector((state) => state.artists.topTracks);
-
+  const fetchedRelatedA = useSelector((state) => state.artists.relatedArtists);
+  console.log(fetchedRelatedA);
   // promiseAll completed the state status becomes finished
-  const finishedState = useSelector((state) => state.artists.status);
+  const stateStatus = useSelector((state) => state.artists.status);
 
   const { id } = useParams();
 
@@ -40,13 +47,17 @@ const ArtistRoute = () => {
 
       const spotFetcher = async () => {
         try {
+          //*Fetch for the artist information*
           let data = await fetchArtistProfile(accessToken, id);
           dispatch(receivedArtistInfo(data));
-
+          //*Fetch for the artist topTrack*
           let trackData = await fetchTopTracks(accessToken, id);
           dispatch(receiveTopTracks(trackData));
+          //*Fetch for the relatedArtists*
+          let relatedA = await fetchRelatedArtists(accessToken, id);
+          dispatch(receiveRelatedArtists(relatedA));
 
-          Promise.all([data, trackData])
+          Promise.all([data, trackData, relatedA])
             .then(() => {
               dispatch(finishReceivingAllArtistInfo());
             })
@@ -62,32 +73,58 @@ const ArtistRoute = () => {
     } else {
       return;
     }
-  }, [accessToken]);
+  }, [accessToken, id]);
 
   return (
     <React.Fragment>
-      {finishedState === "finished" && (
+      {stateStatus === "loading" && <Loading></Loading>}
+      {stateStatus === "finished" && (
         <>
-          <StyledImg
-            src={artistInfo.info.images[1].url}
-            alt="hot since 82 pic"
-          />
-          <StyledName>{artistInfo.info.name}</StyledName>
-          <StyledNumber>
-            {converter(artistInfo.info.followers.total)}{" "}
-            <StyledFollowers> Followers</StyledFollowers>
-          </StyledNumber>
-          {fetchedTopT.map((eachTrack, index) => {
-            return (
-              <>
-                <TopTrack currentlyPlaying={currentlyPlaying}  setCurrentlyPlaying={setCurrentlyPlaying} key={index} eachTrack={eachTrack}></TopTrack>
-              </>
-            );
-          })}
+          <Wrapper>
+            <StyledImg
+              src={artistInfo.info.images[1].url}
+              alt="hot since 82 pic"
+            />
+            <StyledName>{artistInfo.info.name}</StyledName>
+            <StyledNumber>
+              {converter(artistInfo.info.followers.total)}{" "}
+              <StyledFollowers> Followers</StyledFollowers>
+            </StyledNumber>
 
-          <div>tags</div>
-          <Genres twoGenres={artistInfo.info.genres}> </Genres>
-          <div> related artists component</div>
+            <div>
+              {fetchedTopT.map((eachTrack, index) => {
+                return (
+                  <>
+                    <TopTrack
+                      currentlyPlaying={currentlyPlaying}
+                      setCurrentlyPlaying={setCurrentlyPlaying}
+                      key={index}
+                      eachTrack={eachTrack}
+                    ></TopTrack>
+                  </>
+                );
+              })}
+            </div>
+
+            <StyledTag>
+              <StyledTitle>tags</StyledTitle>
+              <Genres twoGenres={artistInfo.info.genres}> </Genres>
+            </StyledTag>
+
+            <StyledTitle>related artists</StyledTitle>
+            <WrapperRA>
+              {fetchedRelatedA.map((eachRelatedArtist, index) => {
+                return (
+                  <>
+                    <RelatedArtists
+                      key={index}
+                      eachRelatedArtist={eachRelatedArtist}
+                    ></RelatedArtists>
+                  </>
+                );
+              })}
+            </WrapperRA>
+          </Wrapper>
         </>
       )}
     </React.Fragment>
@@ -118,3 +155,33 @@ const StyledNumber = styled.div`
 const StyledFollowers = styled.div`
   color: white;
 `;
+
+const Wrapper = styled.div`
+  height: 100vh;
+  margin: 5% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+`;
+const WrapperRA = styled.div`
+  border-radius: 100px;
+  overflow: auto;
+  white-space: nowrap;
+  width: 50%;
+
+  @media only screen and (max-width: 500px) {
+    width: 100%;
+  }
+`;
+
+const StyledTitle = styled.span`
+  font-weight: bold;
+`;
+
+
+const StyledTag = styled.div`
+
+height: 100px;
+
+`
