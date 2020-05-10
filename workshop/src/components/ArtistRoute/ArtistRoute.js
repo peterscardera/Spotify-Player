@@ -134,6 +134,7 @@ const ArtistRoute = () => {
 export default ArtistRoute;
 
 const StyledImg = styled.img`
+  margin-top: 20px;
   width: 175px;
   height: 175px;
   border-radius: 190.5px;
@@ -165,7 +166,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
 `;
 const WrapperRA = styled.div`
-  border-radius: 100px;
+  /* border-radius: 100px; */
   overflow: auto;
   white-space: nowrap;
   width: 50%;
