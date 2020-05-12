@@ -23,10 +23,8 @@ const App = () => {
 
     const spotifyFetcher = async () => {
       try {
-        let data = await fetch("/spotify_access_token", {
-          method: "GET",
-        });
-        console.log(data,"DATAAAA")
+        let data = await fetch("https://bootcamp-spotify.herokuapp.com/spotify_access_token")
+         console.log(data,"DATAAAA")
         if (data.status === 200) {
         
           let jsonData = await data.json();
