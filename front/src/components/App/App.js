@@ -26,7 +26,9 @@ const App = () => {
         let data = await fetch("/spotify_access_token", {
           method: "GET",
         });
+        console.log(data,"DATAAAA")
         if (data.status === 200) {
+        
           let jsonData = await data.json();
             console.log(jsonData)
           dispatch(receiveAccessToken(jsonData.access_token));
