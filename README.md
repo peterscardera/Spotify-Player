@@ -24,7 +24,7 @@ Go to the workshop directory. Run npm install/yarn install followed by npm start
 Node.js - Backend
 React - FrontEnd
 ### Authors
-Manider Dheer.
+Peter Scardera
 Scott Morin.
 Josh Commeau.
 ### License
